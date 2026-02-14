@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="uz">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Anketa</title>
+
+		<script src="https://telegram.org/js/telegram-web-app.js"></script>
+		<script src="https://cdn.tailwindcss.com"></script>
+
+		<meta name="color-scheme" content="light dark" />
+	</head>
+
+	<body class="min-h-screen bg-slate-50 text-slate-900">
+		<div class="mx-auto max-w-2xl p-4 pb-28">
+			<!-- Header -->
+			<div
+				class="mb-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+			>
+				<div class="flex items-start justify-between gap-4">
+					<div>
+						<h1 class="text-xl font-bold">📝 Ishga kirish uchun anketa</h1>
+						<p class="mt-1 text-sm text-slate-600">
+							Ma’lumotlarni to‘g‘ri kiriting. Rasm — fotoshopsiz.
+						</p>
+					</div>
+					<div class="flex items-center gap-2">
+						<button
+							id="tgFillBtn"
+							type="button"
+							class="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-900 shadow-sm hover:bg-slate-50 active:scale-[0.99]"
+						>
+							📌 Telegramdan to‘ldirish
+						</button>
+
+						<div
+							class="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white"
+						>
+							Telegram WebApp
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Alerts -->
+			<div
+				id="alertBox"
+				class="mb-4 hidden rounded-xl border p-4 text-sm"
+			></div>
+
+			<!-- Form Card -->
+			<div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+				<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+					<!-- 1 -->
+					<div class="sm:col-span-2">
+						<label class="text-sm font-semibold">
+							1. F.I.SH <span class="text-red-500">*</span>
+						</label>
+						<input
+							id="full_name"
+							maxlength="160"
+							required
+							placeholder="Masalan: Islom Karimov"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none ring-0 focus:border-slate-400"
+						/>
+					</div>
+
+					<!-- 2 -->
+					<div>
+						<label class="text-sm font-semibold">
+							2. Telefon raqam <span class="text-red-500">*</span>
+						</label>
+						<input
+							id="phone"
+							maxlength="19"
+							required
+							inputmode="tel"
+							autocomplete="tel"
+							placeholder="+998 (__) ___-__-__"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+						/>
+						<!-- <p class="mt-1 text-xs text-slate-500">Masalan: +998901234567</p> -->
+					</div>
+
+					<!-- 3 -->
+					<div>
+						<label class="text-sm font-semibold">3. Tug‘ilgan sana</label>
+						<input
+							id="birth_date"
+							placeholder="01.01.2025"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+						/>
+						<!-- <p class="mt-1 text-xs text-slate-500">Format: DD.MM.YYYY</p> -->
+					</div>
+
+					<!-- 4 -->
+					<div>
+						<label class="text-sm font-semibold">4. Millatingiz</label>
+						<input
+							id="nationality"
+							maxlength="80"
+							placeholder="Masalan: o‘zbek"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+						/>
+					</div>
+
+					<!-- 5 -->
+					<div>
+						<label class="text-sm font-semibold"
+							>5. Doimiy yashash manzili</label
+						>
+						<input
+							id="address"
+							maxlength="255"
+							placeholder="Tuman, qishloq, mahalla"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+						/>
+					</div>
+
+					<!-- 6 -->
+					<div>
+						<label class="text-sm font-semibold">6. Jinsingiz</label>
+						<select
+							id="gender"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+						>
+							<option value="">---</option>
+							<option value="male">Erkak</option>
+							<option value="female">Ayol</option>
+						</select>
+					</div>
+
+					<!-- 10 -->
+					<div>
+						<label class="text-sm font-semibold">10. Oilalimisiz</label>
+						<select
+							id="is_married"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+						>
+							<option value="false">Yo‘q</option>
+							<option value="true">Ha</option>
+						</select>
+					</div>
+
+					<!-- 7 -->
+					<div class="sm:col-span-2">
+						<label class="text-sm font-semibold"
+							>7. Oldin qayerda ishlagansiz?</label
+						>
+						<input
+							id="prev_job"
+							maxlength="255"
+							placeholder="Masalan: Supermarket / Kafe / Zavod"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+						/>
+					</div>
+
+					<!-- 8 -->
+					<div>
+						<label class="text-sm font-semibold"
+							>8. Qancha muddat ishlagansiz?</label
+						>
+						<input
+							id="prev_job_duration"
+							maxlength="80"
+							placeholder="Masalan: 6 oy / 1 yil"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+						/>
+					</div>
+
+					<!-- 9 -->
+					<div>
+						<label class="text-sm font-semibold"
+							>9. Nima sababdan bo‘shagansiz?</label
+						>
+						<input
+							id="prev_job_leave_reason"
+							maxlength="255"
+							placeholder="Masalan: o‘qish / boshqa ish / oilaviy sabab"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+						/>
+					</div>
+
+					<!-- 11 -->
+					<div class="sm:col-span-2">
+						<label class="text-sm font-semibold"
+							>11. Biz haqimizda qayerdan bildingiz?</label
+						>
+						<input
+							id="source"
+							maxlength="255"
+							placeholder="Masalan: Instagram / do‘stlar / Telegram"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+						/>
+					</div>
+
+					<!-- 12 -->
+					<div class="sm:col-span-2">
+						<label class="text-sm font-semibold"
+							>12. Qancha maosh istaysiz?</label
+						>
+						<input
+							id="desired_salary"
+							maxlength="80"
+							placeholder="Masalan: 3 500 000 so‘m"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+						/>
+					</div>
+
+					<!-- 13 -->
+					<div class="sm:col-span-2">
+						<label class="text-sm font-semibold">
+							13. Nega sizni ishga olishimiz kerak (3 ta fakt)?
+						</label>
+						<textarea
+							id="why_hire_facts"
+							rows="5"
+							placeholder="1) ...&#10;2) ...&#10;3) ..."
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+						></textarea>
+					</div>
+
+					<!-- 14 -->
+					<div class="sm:col-span-2">
+						<label class="text-sm font-semibold">
+							14. Rasmingizni yuklang (fotoshopsiz)
+							<span class="text-red-500">*</span>
+						</label>
+						<div
+							class="mt-1 rounded-xl border border-dashed border-slate-300 p-4"
+						>
+							<input
+								id="photo"
+								type="file"
+								accept="image/*"
+								capture="environment"
+								required
+								class="block w-full text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-900 file:px-3 file:py-2 file:text-white file:cursor-pointer"
+							/>
+							<p class="mt-2 text-xs text-slate-500">
+								Talab: JPG/PNG. Maks: 5MB. Rasm aniq ko‘rinadigan bo‘lsin.
+							</p>
+
+							<div id="photoPreviewWrap" class="mt-3 hidden">
+								<p class="text-xs font-semibold text-slate-600">
+									Oldindan ko‘rish:
+								</p>
+								<img
+									id="photoPreview"
+									alt="preview"
+									class="mt-2 h-40 w-40 rounded-xl object-cover ring-1 ring-slate-200"
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Sticky submit bar -->
+			<div
+				class="fixed inset-x-0 bottom-0 border-t border-slate-200 bg-white/90 backdrop-blur"
+			>
+				<div class="mx-auto max-w-2xl p-4">
+					<button
+						id="submitBtn"
+						class="w-full rounded-2xl bg-slate-900 px-4 py-3 text-base font-semibold text-white shadow-sm disabled:opacity-60"
+					>
+						✅ Yuborish
+					</button>
+					<p class="mt-2 text-center text-xs text-slate-500">
+						Yuborish tugmasini bosish orqali ma’lumotlar to‘g‘riligini
+						tasdiqlaysiz.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			const tg = window.Telegram?.WebApp
+			if (tg) tg.expand()
+
+			// Telegram Autofill
+			function getTgUser() {
+				try {
+					return tg?.initDataUnsafe?.user || null
+				} catch {
+					return null
+				}
+			}
+
+			function buildFullNameFromTg(user) {
+				if (!user) return null
+				const first = (user.first_name || '').trim()
+				const last = (user.last_name || '').trim()
+				const name = `${first} ${last}`.trim()
+				return name || null
+			}
+
+			function applyTelegramAutofill() {
+				const user = getTgUser()
+				if (!user) return
+
+				const fullNameEl = document.getElementById('full_name')
+				const sourceEl = document.getElementById('source')
+
+				// 1) ФИО: заполняем только если поле пустое
+				const tgName = buildFullNameFromTg(user)
+				if (tgName && fullNameEl && !fullNameEl.value.trim()) {
+					fullNameEl.value = tgName
+				}
+
+				// 2) Source: если пусто — ставим Telegram
+				if (sourceEl && !sourceEl.value.trim()) {
+					sourceEl.value = 'Telegram'
+				}
+
+				// 3) сохраним в draft (если autosave уже подключен)
+				try {
+					if (typeof saveDraftDebounced === 'function') {
+						saveDraftDebounced()
+					}
+				} catch {}
+			}
+
+			// Запускаем autofill после загрузки draft (если draft есть — он приоритетнее)
+			setTimeout(applyTelegramAutofill, 0)
+
+			// Manual trigger button
+			const tgFillBtn = document.getElementById('tgFillBtn')
+			if (tgFillBtn) {
+				tgFillBtn.addEventListener('click', () => {
+					applyTelegramAutofill()
+					showAlert('✅ Telegram ma’lumotlari qo‘llandi.', 'ok')
+					setTimeout(hideAlert, 1200)
+				})
+			}
+
+			const alertBox = document.getElementById('alertBox')
+
+			function showAlert(message, type = 'error') {
+				alertBox.classList.remove('hidden')
+				alertBox.textContent = message
+
+				// reset classes
+				alertBox.className = 'mb-4 rounded-xl border p-4 text-sm'
+
+				if (type === 'ok') {
+					alertBox.classList.add(
+						'border-green-200',
+						'bg-green-50',
+						'text-green-800',
+					)
+				} else if (type === 'warn') {
+					alertBox.classList.add(
+						'border-amber-200',
+						'bg-amber-50',
+						'text-amber-800',
+					)
+				} else {
+					alertBox.classList.add('border-red-200', 'bg-red-50', 'text-red-800')
+				}
+			}
+
+			function hideAlert() {
+				alertBox.classList.add('hidden')
+				alertBox.textContent = ''
+			}
+
+			function parseBirthDate(s) {
+				if (!s) return null
+				const m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(s.trim())
+				if (!m) return null
+				const dd = m[1],
+					mm = m[2],
+					yyyy = m[3]
+				return `${yyyy}-${mm}-${dd}`
+			}
+
+			function validatePhone(phone) {
+				// простой вариант: разрешаем + и цифры, 9-15 цифр
+				const cleaned = phone.replace(/\s+/g, '')
+				return /^\+?\d{9,15}$/.test(cleaned)
+			}
+
+			// Phone mask +998 (__) ___-__-__
+			function digitsOnly(s) {
+				return (s || '').replace(/\D/g, '')
+			}
+
+			function formatUzPhone(value) {
+				let d = digitsOnly(value)
+
+				// всегда начинаем с 998
+				if (!d.startsWith('998')) {
+					d = '998' + d.replace(/^998?/, '')
+				}
+
+				d = d.slice(0, 12)
+
+				const cc = d.slice(0, 3)
+				const aa = d.slice(3, 5)
+				const bbb = d.slice(5, 8)
+				const c2 = d.slice(8, 10)
+				const d2 = d.slice(10, 12)
+
+				let out = `+${cc}`
+
+				if (aa) out += ` (${aa}`
+				if (aa.length === 2) out += ')'
+
+				if (bbb) out += ` ${bbb}`
+				if (c2) out += `-${c2}`
+				if (d2) out += `-${d2}`
+
+				return out
+			}
+
+			function phoneToE164(masked) {
+				const d = digitsOnly(masked)
+				if (d.length === 12 && d.startsWith('998')) {
+					return `+${d}`
+				}
+				return null
+			}
+
+			const phoneEl = document.getElementById('phone')
+
+			phoneEl.addEventListener('input', () => {
+				phoneEl.value = formatUzPhone(phoneEl.value)
+				saveDraftDebounced()
+			})
+
+			// AUTOSAVE
+			const DRAFT_KEY = 'hr_app_draft_v1'
+
+			const FIELD_IDS = [
+				'full_name',
+				'phone',
+				'birth_date',
+				'nationality',
+				'address',
+				'gender',
+				'prev_job',
+				'prev_job_duration',
+				'prev_job_leave_reason',
+				'is_married',
+				'source',
+				'desired_salary',
+				'why_hire_facts',
+			]
+
+			function saveDraft() {
+				const data = {}
+
+				FIELD_IDS.forEach(id => {
+					const el = document.getElementById(id)
+					if (el) data[id] = el.value
+				})
+
+				localStorage.setItem(DRAFT_KEY, JSON.stringify(data))
+			}
+
+			let draftTimer
+
+			function saveDraftDebounced() {
+				clearTimeout(draftTimer)
+				draftTimer = setTimeout(saveDraft, 400)
+			}
+
+			function loadDraft() {
+				const raw = localStorage.getItem(DRAFT_KEY)
+				if (!raw) return
+
+				try {
+					const data = JSON.parse(raw)
+
+					FIELD_IDS.forEach(id => {
+						const el = document.getElementById(id)
+						if (el && data[id]) {
+							el.value = data[id]
+						}
+					})
+
+					phoneEl.value = formatUzPhone(phoneEl.value)
+				} catch {}
+			}
+
+			function clearDraft() {
+				localStorage.removeItem(DRAFT_KEY)
+			}
+
+			// сохраняем при вводе
+			FIELD_IDS.forEach(id => {
+				const el = document.getElementById(id)
+				if (!el) return
+
+				el.addEventListener('input', saveDraftDebounced)
+				el.addEventListener('change', saveDraftDebounced)
+			})
+
+			// загрузим draft
+			loadDraft()
+
+			async function postJson(url, data, initData) {
+				const res = await fetch(url, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-Tg-Init-Data': initData || '',
+					},
+					body: JSON.stringify(data),
+				})
+				if (!res.ok) throw new Error(await res.text())
+				return res.json()
+			}
+
+			async function uploadPhoto(url, file, initData) {
+				const fd = new FormData()
+				// ✅ ВАЖНО: backend ожидает "photo"
+				fd.append('photo', file)
+
+				const res = await fetch(url, {
+					method: 'POST',
+					headers: { 'X-Tg-Init-Data': initData || '' },
+					body: fd,
+				})
+				if (!res.ok) throw new Error(await res.text())
+				return res.json()
+			}
+
+			// Preview
+			const photoInput = document.getElementById('photo')
+			const photoPreviewWrap = document.getElementById('photoPreviewWrap')
+			const photoPreview = document.getElementById('photoPreview')
+
+			photoInput.addEventListener('change', () => {
+				hideAlert()
+				const f = photoInput.files?.[0]
+				if (!f) {
+					photoPreviewWrap.classList.add('hidden')
+					photoPreview.src = ''
+					return
+				}
+				if (!f.type.startsWith('image/')) {
+					showAlert('Faqat rasm fayl yuklang (jpg/png).', 'warn')
+					photoInput.value = ''
+					photoPreviewWrap.classList.add('hidden')
+					return
+				}
+				const url = URL.createObjectURL(f)
+				photoPreview.src = url
+				photoPreviewWrap.classList.remove('hidden')
+			})
+
+			document
+				.getElementById('submitBtn')
+				.addEventListener('click', async () => {
+					hideAlert()
+
+					const btn = document.getElementById('submitBtn')
+					btn.disabled = true
+					btn.textContent = 'Yuborilmoqda...'
+
+					try {
+						const initData = tg?.initData || ''
+
+						const fullName = document.getElementById('full_name').value.trim()
+						const phoneMasked = document.getElementById('phone').value.trim()
+						const phone = phoneToE164(phoneMasked)
+
+						if (!fullName || !phone) {
+							showAlert('F.I.SH va Telefon majburiy.', 'warn')
+							throw new Error('validation')
+						}
+
+						if (!phone) {
+							showAlert(
+								'Telefon raqam formati noto‘g‘ri. Masalan: +998 (90) 123-45-67',
+								'warn',
+							)
+							throw new Error('validation')
+						}
+
+						const birthRaw = document.getElementById('birth_date').value.trim()
+						const birthParsed = parseBirthDate(birthRaw)
+						if (birthRaw && !birthParsed) {
+							showAlert(
+								'Tug‘ilgan sana formati noto‘g‘ri. Format: DD.MM.YYYY',
+								'warn',
+							)
+							throw new Error('validation')
+						}
+
+						const photo = document.getElementById('photo').files[0]
+						if (!photo) {
+							showAlert('Rasm majburiy. Iltimos rasm yuklang.', 'warn')
+							throw new Error('photo required')
+						}
+
+						if (!photo.type.startsWith('image/')) {
+							showAlert('Faqat rasm fayl yuklang (jpg/png).', 'warn')
+							throw new Error('invalid file type')
+						}
+
+						const MAX_SIZE = 5 * 1024 * 1024
+						if (photo.size > MAX_SIZE) {
+							showAlert('Rasm hajmi 5MB dan oshmasin.', 'warn')
+							throw new Error('file too large')
+						}
+
+						const payload = {
+							full_name: fullName,
+							phone: phone,
+							birth_date: birthParsed,
+							nationality:
+								document.getElementById('nationality').value.trim() || null,
+							address: document.getElementById('address').value.trim() || null,
+							gender: document.getElementById('gender').value || null,
+							prev_job:
+								document.getElementById('prev_job').value.trim() || null,
+							prev_job_duration:
+								document.getElementById('prev_job_duration').value.trim() ||
+								null,
+							prev_job_leave_reason:
+								document.getElementById('prev_job_leave_reason').value.trim() ||
+								null,
+							is_married:
+								document.getElementById('is_married').value === 'true',
+							source: document.getElementById('source').value.trim() || null,
+							desired_salary:
+								document.getElementById('desired_salary').value.trim() || null,
+							why_hire_facts:
+								document.getElementById('why_hire_facts').value.trim() || null,
+						}
+
+						// 1) create application
+						const created = await postJson(
+							'/api/applications',
+							payload,
+							initData,
+						)
+
+						// 2) upload photo (required)
+						await uploadPhoto(
+							`/api/applications/${created.id}/photo`,
+							photo,
+							initData,
+						)
+
+						showAlert('✅ Ariza yuborildi! Rahmat.', 'ok')
+
+						clearDraft()
+
+						setTimeout(() => {
+							if (tg) tg.close()
+						}, 600)
+					} catch (e) {
+						console.error(e)
+						if (alertBox.classList.contains('hidden')) {
+							showAlert(
+								'Xatolik: ariza yuborilmadi. Qayta urinib ko‘ring.',
+								'error',
+							)
+						}
+					} finally {
+						btn.disabled = false
+						btn.textContent = '✅ Yuborish'
+					}
+				})
+		</script>
+	</body>
+</html>

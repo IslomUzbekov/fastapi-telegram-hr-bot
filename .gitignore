@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual env
+.venv/
+venv/
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Docker
+postgres_data/
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Mac / Linux
+.DS_Store

@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: hr_db
+    environment:
+      POSTGRES_DB: hr
+      POSTGRES_USER: hr
+      POSTGRES_PASSWORD: hr
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    container_name: hr_backend
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./backend/media:/app/media
+
+  bot:
+    build:
+      context: ./bot
+    container_name: hr_bot
+    env_file:
+      - ./bot/.env
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+
+volumes:
+  pgdata:

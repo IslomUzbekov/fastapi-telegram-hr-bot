@@ -4,7 +4,6 @@ from aiogram import F, Router
 from aiogram.filters import CommandObject, CommandStart
 from aiogram.types import CallbackQuery, Message
 from app.config import settings
-from app.db.models import EmployerRole
 from app.keyboards.hr import (
     application_actions_kb,
     applications_list_kb,
@@ -33,7 +32,7 @@ async def require_owner(user_id: int) -> bool:
     Разрешено: только OWNER.
     """
     emp = await api.get_employer(user_id)
-    return emp.get("is_hr") is True and emp.get("role") == EmployerRole.OWNER.value
+    return emp.get("is_hr") is True and emp.get("role") == "OWNER"
 
 
 @router.message(CommandStart(deep_link=True))

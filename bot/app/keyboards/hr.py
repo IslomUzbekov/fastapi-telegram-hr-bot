@@ -8,7 +8,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 def hr_menu_kb() -> InlineKeyboardMarkup:
     b = InlineKeyboardBuilder()
-    b.button(text="🆕 Yangi", callback_data="hr:list:new")
+    b.button(text="🆕 Yangi arizalar", callback_data="hr:list:new")
     b.button(text="👀 Ko'rib chiqish", callback_data="hr:list:in_review")
     b.button(text="✅ Qabul qilish", callback_data="hr:list:accepted")
     b.button(text="❌ Rad etish", callback_data="hr:list:rejected")

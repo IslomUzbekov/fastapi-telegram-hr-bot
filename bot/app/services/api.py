@@ -22,7 +22,7 @@ class BackendClient:
     ) -> list[dict[str, Any]]:
 
         status = status.lower()
-        url = f"{self.base_url}/api/internal/admin/applications"
+        url = f"{self.base_url}/api/v1/internal/admin/applications"
         params = {"status": status, "limit": limit, "offset": offset}
 
         async with aiohttp.ClientSession() as session:
@@ -39,7 +39,7 @@ class BackendClient:
         application_id: int,
     ) -> dict[str, Any]:
 
-        url = f"{self.base_url}/api/internal/admin/applications/{application_id}"
+        url = f"{self.base_url}/api/v1/internal/admin/applications/{application_id}"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=self._headers()) as resp:
@@ -53,7 +53,7 @@ class BackendClient:
     ) -> dict[str, Any]:
 
         status = status.lower()
-        url = f"{self.base_url}/api/internal/admin/applications/{application_id}/status"
+        url = f"{self.base_url}/api/v1/internal/admin/applications/{application_id}/status"
 
         async with aiohttp.ClientSession() as session:
             async with session.patch(
@@ -64,7 +64,7 @@ class BackendClient:
 
     async def get_employer(self, tg_user_id: int) -> dict:
 
-        url = f"{self.base_url}/api/internal/employers/by-tg/{tg_user_id}"
+        url = f"{self.base_url}/api/v1/internal/employers/by-tg/{tg_user_id}"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(
@@ -83,7 +83,7 @@ class BackendClient:
         role: str = "RECRUITER",
     ) -> dict[str, Any]:
 
-        url = f"{self.base_url}/api/internal/invites/create"
+        url = f"{self.base_url}/api/v1/internal/invites/create"
 
         async with aiohttp.ClientSession() as session:
             async with session.post(
@@ -100,7 +100,7 @@ class BackendClient:
         token: str,
     ) -> dict[str, Any]:
 
-        url = f"{self.base_url}/api/internal/invites/join"
+        url = f"{self.base_url}/api/v1/internal/invites/join"
 
         async with aiohttp.ClientSession() as session:
             async with session.post(

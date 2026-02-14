@@ -195,9 +195,28 @@
 					</div>
 
 					<!-- 12 -->
+					<div class="sm:col-span-2 space-y-2">
+						<label class="text-sm font-semibold">
+							12. Qaysi ish smenasi siz uchun qulay?
+						</label>
+
+						<select
+							id="preferred_shift"
+							name="preferred_shift"
+							class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-slate-400"
+							required
+						>
+							<option value="" selected disabled>Smenani tanlang</option>
+							<option value="MORNING">Ertalabgi smena</option>
+							<option value="AFTERNOON">Kechki smena</option>
+							<option value="FLEX">Moslashuvchan</option>
+						</select>
+					</div>
+
+					<!-- 13 -->
 					<div class="sm:col-span-2">
 						<label class="text-sm font-semibold"
-							>12. Qancha maosh istaysiz?</label
+							>13. Qancha maosh istaysiz?</label
 						>
 						<input
 							id="desired_salary"
@@ -207,10 +226,10 @@
 						/>
 					</div>
 
-					<!-- 13 -->
+					<!-- 14 -->
 					<div class="sm:col-span-2">
 						<label class="text-sm font-semibold">
-							13. Nega sizni ishga olishimiz kerak (3 ta fakt)?
+							14. Nega sizni ishga olishimiz kerak (3 ta fakt)?
 						</label>
 						<textarea
 							id="why_hire_facts"
@@ -220,10 +239,10 @@
 						></textarea>
 					</div>
 
-					<!-- 14 -->
+					<!-- 15 -->
 					<div class="sm:col-span-2">
 						<label class="text-sm font-semibold">
-							14. Rasmingizni yuklang (fotoshopsiz)
+							15. Rasmingizni yuklang (fotoshopsiz)
 							<span class="text-red-500">*</span>
 						</label>
 						<div
@@ -445,6 +464,7 @@
 				'prev_job_leave_reason',
 				'is_married',
 				'source',
+				'preferred_shift',
 				'desired_salary',
 				'why_hire_facts',
 			]
@@ -581,6 +601,13 @@
 							throw new Error('validation')
 						}
 
+						const shift = document.getElementById('preferred_shift').value
+
+						if (!shift) {
+							showAlert('Iltimos, qaysi smenada ishlashni tanlang.', 'warn')
+							throw new Error('shift required')
+						}
+
 						const birthRaw = document.getElementById('birth_date').value.trim()
 						const birthParsed = parseBirthDate(birthRaw)
 						if (birthRaw && !birthParsed) {
@@ -627,6 +654,8 @@
 							is_married:
 								document.getElementById('is_married').value === 'true',
 							source: document.getElementById('source').value.trim() || null,
+							preferred_shift:
+								document.getElementById('preferred_shift').value || null,
 							desired_salary:
 								document.getElementById('desired_salary').value.trim() || null,
 							why_hire_facts:

@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 router = APIRouter(
-    prefix="/api/internal/employers",
+    prefix="/employers",
     tags=["internal-employers"],
     dependencies=[Depends(require_internal_token)],
 )

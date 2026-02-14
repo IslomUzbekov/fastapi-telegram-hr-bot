@@ -1,6 +1,6 @@
 from datetime import date
 
-from app.db.models import Gender
+from app.db.models import Gender, WorkShift
 from pydantic import BaseModel, Field
 
 
@@ -19,6 +19,7 @@ class ApplicationCreate(BaseModel):
 
     is_married: bool = False
     source: str | None = Field(default=None, max_length=255)
+    preferred_shift: WorkShift | None = None
     desired_salary: str | None = Field(default=None, max_length=80)
     why_hire_facts: str | None = None
 

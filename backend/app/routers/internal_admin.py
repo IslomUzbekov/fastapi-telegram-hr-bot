@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 router = APIRouter(
-    prefix="/api/internal/admin",
+    prefix="/admin",
     tags=["internal-admin"],
     dependencies=[Depends(require_internal_token)],
 )

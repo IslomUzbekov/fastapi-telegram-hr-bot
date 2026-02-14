@@ -10,7 +10,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 router = APIRouter(
-    prefix="/api/internal/invites",
+    prefix="/invites",
     tags=["internal-invites"],
     dependencies=[Depends(require_internal_token)],
 )

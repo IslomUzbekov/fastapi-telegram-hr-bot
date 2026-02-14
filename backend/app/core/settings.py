@@ -6,6 +6,8 @@ class Settings(BaseSettings):
 
     internal_api_token: str
 
+    backend_url: str
+
     db_host: str
     db_port: int
     db_name: str

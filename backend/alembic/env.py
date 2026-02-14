@@ -1,11 +1,10 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config, pool
 from alembic import context
-
 from app.core.settings import settings
-from app.db.base import Base
 from app.db import models  # noqa: F401  (нужно чтобы alembic видел модели)
+from app.db.base import Base
+from sqlalchemy import engine_from_config, pool
 
 # Alembic Config object
 config = context.config
@@ -33,7 +32,8 @@ def run_migrations_offline() -> None:
         url=get_database_url(),
         target_metadata=target_metadata,
         literal_binds=True,
-        compare_type=True,  # важно для alembic autogenerate
+        compare_type=True,
+        compare_server_default=True,
         dialect_opts={"paramstyle": "named"},
     )
 

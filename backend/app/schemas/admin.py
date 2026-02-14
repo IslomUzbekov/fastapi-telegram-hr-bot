@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from app.db.models import ApplicationStatus, Gender
+from app.db.models import ApplicationStatus, Gender, WorkShift
 from pydantic import BaseModel, Field
 
 
@@ -22,6 +22,7 @@ class AdminApplicationOut(BaseModel):
 
     is_married: bool
     source: str | None
+    preferred_shift: WorkShift | None
     desired_salary: str | None
     why_hire_facts: str | None
 

@@ -30,6 +30,12 @@ class Gender(str, enum.Enum):
     FEMALE = "female"
 
 
+class WorkShift(str, enum.Enum):
+    MORNING = "morning"
+    AFTERNOON = "afternoon"
+    FLEX = "flex"
+
+
 class Vacancy(Base):
     __tablename__ = "vacancies"
 
@@ -105,6 +111,10 @@ class Application(Base):
     source: Mapped[str | None] = mapped_column(String(255), nullable=True)
     desired_salary: Mapped[str | None] = mapped_column(
         String(80),
+        nullable=True,
+    )
+    preferred_shift: Mapped[WorkShift | None] = mapped_column(
+        Enum(WorkShift, name="workshift_enum"),
         nullable=True,
     )
     why_hire_facts: Mapped[str | None] = mapped_column(Text, nullable=True)

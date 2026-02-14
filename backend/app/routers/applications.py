@@ -127,6 +127,7 @@ def create_application(
         prev_job_leave_reason=data.prev_job_leave_reason,
         is_married=data.is_married,
         source=data.source,
+        preferred_shift=data.preferred_shift,
         desired_salary=data.desired_salary,
         why_hire_facts=data.why_hire_facts,
     )
@@ -257,6 +258,10 @@ def _format_new_application_text(app: Application) -> str:
 
     if app.source:
         parts.append(f"🔎 Qayerdan bildi: {app.source}")
+    if app.preferred_shift:
+        parts.append(
+            f"🕒 Smena: {app.preferred_shift.value if hasattr(app.preferred_shift, 'value') else app.preferred_shift}"
+        )
     if app.desired_salary:
         parts.append(f"💰 Istagan maosh: {app.desired_salary}")
     if app.why_hire_facts:

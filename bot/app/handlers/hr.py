@@ -207,3 +207,74 @@ async def add_recruiter(cb: CallbackQuery):
 
     await cb.message.answer(f"🔗 HR uchun havola:\n{link}")
     await cb.answer()
+
+
+@router.message(Command("yangi_arizalar"))
+async def cmd_new_applications(message: Message) -> None:
+    if not await require_hr(message.from_user.id):
+        await message.answer("Ruxsat yo'q")
+        return
+
+    rows = await api.list_applications(status="new", limit=20, offset=0)
+    if not rows:
+        await message.answer("Yangi arizalar yo‘q.")
+        return
+
+    await message.answer(
+        "📄 Yangi arizalar:",
+        reply_markup=applications_list_kb(rows),
+    )
+
+
+@router.message(Command("korib_chiqilmoqda"))
+async def cmd_in_review_applications(message: Message) -> None:
+    if not await require_hr(message.from_user.id):
+        await message.answer("Ruxsat yo'q")
+        return
+
+    rows = await api.list_applications(status="in_review", limit=20, offset=0)
+    if not rows:
+        await message.answer("Ko‘rib chiqilayotgan arizalar yo‘q.")
+        return
+
+    await message.answer(
+        "📄 Ko‘rib chiqilmoqda:", reply_markup=applications_list_kb(rows)
+    )
+
+
+@router.message(Command("qabul"))
+async def cmd_accept_application(
+    message: Message,
+    command: CommandObject,
+) -> None:
+    if not await require_hr(message.from_user.id):
+        await message.answer("Ruxsat yo'q")
+        return
+
+    args = (command.args or "").strip()
+    if not args.isdigit():
+        await message.answer("Qabul qilish uchun: /qabul <ariza_id>")
+        return
+
+    app_id = int(args)
+    await api.set_status(app_id, status="accepted")
+    await message.answer(f"✅ Ariza #{app_id} qabul qilindi")
+
+
+@router.message(Command("rad"))
+async def cmd_reject_application(
+    message: Message,
+    command: CommandObject,
+) -> None:
+    if not await require_hr(message.from_user.id):
+        await message.answer("Ruxsat yo'q")
+        return
+
+    args = (command.args or "").strip()
+    if not args.isdigit():
+        await message.answer("Rad etish uchun: /rad <ariza_id>")
+        return
+
+    app_id = int(args)
+    await api.set_status(app_id, status="rejected")
+    await message.answer(f"❌ Ariza #{app_id} rad etildi")

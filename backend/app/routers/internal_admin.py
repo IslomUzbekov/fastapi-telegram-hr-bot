@@ -77,15 +77,12 @@ def get_application(application_id: int, db: Session = Depends(get_db)):
 
 @router.patch("/applications/{application_id}/status")
 def update_status(
-    application_id: int,
-    payload: AdminStatusUpdateIn,
-    db: Session = Depends(get_db),
+    application_id: int, payload: AdminStatusUpdateIn, db: Session = Depends(get_db)
 ):
     app = (
         db.query(Application)
-        .filter(
-            Application.id == application_id,
-        )
+        .join(Candidate, Candidate.id == Application.candidate_id)
+        .filter(Application.id == application_id)
         .one_or_none()
     )
     if app is None:
@@ -94,13 +91,26 @@ def update_status(
     app.status = payload.status
     db.commit()
 
-    # если status это Enum, лучше вернуть .value чтобы не было сюрпризов
-    status_out = (
-        app.status.value
-        if hasattr(
-            app.status,
-            "value",
+    # notify candidate about decision / progress
+    try:
+        msg = _status_message(payload.status)
+        _send_telegram_plain_message(
+            bot_token=settings.bot_token,
+            chat_id=app.candidate.tg_user_id,
+            text=msg,
         )
-        else app.status
-    )
+    except Exception:
+        pass
+
+    status_out = app.status.value if hasattr(app.status, "value") else app.status
     return {"ok": True, "id": app.id, "status": status_out}
+
+
+def _status_message(status: ApplicationStatus) -> str:
+    if status == ApplicationStatus.ACCEPTED:
+        return "✅ Arizangiz qabul qilindi!\n\nTez orada siz bilan bog‘lanamiz."
+    if status == ApplicationStatus.REJECTED:
+        return "❌ Afsus, arizangiz rad etildi.\n\nKeyingi safar omad!"
+    if status == ApplicationStatus.IN_REVIEW:
+        return "🕒 Arizangiz ko‘rib chiqilmoqda.\n\nTez orada javob beramiz."
+    return "ℹ️ Arizangiz holati yangilandi."

@@ -135,6 +135,14 @@ def create_application(
     db.commit()
     db.refresh(app)
 
+    background_tasks.add_task(
+        _send_telegram_plain_message,
+        settings.bot_token,
+        tg_user_id,
+        "✅ Ariza qabul qilindi!\n\n",
+        "Arizangiz tez orada ko‘rib chiqiladi va sizga bot orqali xabar beriladi.",
+    )
+
     # уведомляем всех активных работодателей
     employers = db.query(Employer).filter(Employer.is_active == True).all()
 

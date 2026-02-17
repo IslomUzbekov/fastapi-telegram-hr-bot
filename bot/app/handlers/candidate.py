@@ -27,7 +27,7 @@ def candidate_kb() -> InlineKeyboardMarkup:
 @router.message(CommandStart())
 async def start_candidate(message: Message):
     # Если это owner — НЕ перехватываем
-    if message.from_user.id == settings.owner_tg_id:
+    if settings.owner_tg_id and message.from_user.id == settings.owner_tg_id:
         return
 
     await message.answer(

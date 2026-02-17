@@ -1,9 +1,12 @@
 # --- env / secrets ---
 .env
-*.env
-*.env.*
 backend/.env
 bot/.env
+
+# игнорим любые env файлы, КРОМЕ шаблонов
+*.env*
+!*.env.example
+!*.env.template
 
 # --- python ---
 __pycache__/

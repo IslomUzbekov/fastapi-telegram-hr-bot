@@ -1,25 +1,29 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+# --- env / secrets ---
+.env
+*.env
+*.env.*
+backend/.env
+bot/.env
 
-# Virtual env
+# --- python ---
+__pycache__/
+*.py[cod]
 .venv/
 venv/
 
-# Env files
-.env
-.env.*
-!.env.example
-
-# Docker
-postgres_data/
+# --- logs / runtime ---
 *.log
+media/
+uploads/
+db-data/
 
-# IDE
+# --- node ---
+node_modules/
+dist/
+build/
+
+# --- ide ---
 .vscode/
 .idea/
-
-# Mac / Linux
 .DS_Store
+Thumbs.db

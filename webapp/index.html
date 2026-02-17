@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="uz">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Ariza</title>
+		<script src="https://telegram.org/js/telegram-web-app.js"></script>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				padding: 16px;
+			}
+			input,
+			select,
+			button {
+				width: 100%;
+				padding: 10px;
+				margin: 8px 0;
+			}
+			button {
+				cursor: pointer;
+			}
+			.row {
+				margin-bottom: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<h2>📝 Ishga ariza</h2>
+
+		<div class="row"><input id="full_name" placeholder="F.I.Sh" /></div>
+		<div class="row"><input id="phone" placeholder="Telefon raqam" /></div>
+		<div class="row">
+			<input id="birth_date" placeholder="Tug‘ilgan sana (01.01.2025)" />
+		</div>
+		<div class="row"><input id="nationality" placeholder="Millatingiz" /></div>
+		<div class="row">
+			<input id="address" placeholder="Manzil (tuman, qishloq, mahalla)" />
+		</div>
+
+		<button id="send">Yuborish</button>
+
+		<script>
+			const tg = window.Telegram.WebApp
+			tg.ready()
+
+			const API = 'https://api.example.com' // <-- замени на свой API домен
+
+			function val(id) {
+				return document.getElementById(id).value.trim()
+			}
+
+			document.getElementById('send').addEventListener('click', async () => {
+				const payload = {
+					full_name: val('full_name'),
+					phone: val('phone'),
+					birth_date: val('birth_date'),
+					nationality: val('nationality'),
+					address: val('address'),
+					init_data: tg.initData,
+				}
+
+				try {
+					const res = await fetch(`${API}/api/public/applications`, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(payload),
+					})
+
+					if (!res.ok) {
+						const txt = await res.text()
+						alert('Xatolik: ' + txt)
+						return
+					}
+
+					alert('✅ Yuborildi!')
+					tg.close()
+				} catch (e) {
+					alert('Network xatolik: ' + e)
+				}
+			})
+		</script>
+	</body>
+</html>

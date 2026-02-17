@@ -1,0 +1,74 @@
+services:
+  db:
+    image: postgres:16
+    container_name: hr_db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - hr_net
+
+  backend:
+    build:
+      context: ./backend
+    container_name: hr_backend
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+    volumes:
+      - media:/app/media
+    restart: unless-stopped
+    networks:
+      - hr_net
+
+  bot:
+    build:
+      context: ./bot
+    container_name: hr_bot
+    env_file:
+      - ./bot/.env
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - hr_net
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: hr_nginx
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infra/nginx/sites:/etc/nginx/conf.d:ro
+      - ./infra/certbot/www:/var/www/certbot:ro
+      - ./infra/certbot/conf:/etc/letsencrypt:ro
+      - media:/var/www/media:ro
+      - ./webapp:/var/www/webapp:ro
+    restart: unless-stopped
+    networks:
+      - hr_net
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: hr_certbot
+    volumes:
+      - ./infra/certbot/www:/var/www/certbot
+      - ./infra/certbot/conf:/etc/letsencrypt
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  media:
+
+networks:
+  hr_net:
+    driver: bridge
